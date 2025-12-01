@@ -1,9 +1,17 @@
+# Importante
+- No ejecutar ningun comando de git push o git add, solo generar el mensaje del commit a traves de git diff, git log y git status.
+
 ## 1. Preparación del Cambio (Atomicidad)
+- Asegúrate de que el nombre de la rama donde se efectuara el cambio tenga el nombre apropiado. caso contrario no sigas estas instrucciones y exige que se cree una rama con el nombre apropiado. 
+```Retorna "El nombre de la rama es incorrecto, por favor crea una rama con el nombre apropiado".```
 - Asegúrate de que no haya errores en el código, caso contrario no sigas estas instrucciones y exige que se corrijan los errores.
+```Retorna "El código tiene errores, por favor corrige los errores".```
 - Asegúrate de que tu cambio sea atómico: 
     - Debe representar una única modificación lógica o funcionalidad completa.
 - Revisa los cambios:
     - Antes de generar el commit, utiliza git diff para confirmar exactamente qué archivos vas a incluir.
+    - Antes de generar el commit, utiliza git log para confirmar exactamente qué archivos vas a incluir.
+    - Antes de generar el commit, utiliza git status para confirmar exactamente qué archivos vas a incluir.
 
 ## 2. Documentación del Commit
 - Para mantener un registro, crea un archivo de documentación en la carpeta docs/commits/:
