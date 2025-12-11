@@ -1,0 +1,30 @@
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
+
+@Injectable()
+export class UsersService {
+    constructor(private prisma: PrismaService) { }
+
+    create(createUserDto: CreateUserDto) {
+        // Password should be hashed in production
+        return this.prisma.user.create({
+            data: {
+                email: createUserDto.email,
+                name: createUserDto.name,
+                lastname: createUserDto.lastname,
+            },
+        });
+    }
+
+    findAll() {
+        return this.prisma.user.findMany();
+    }
+
+    findOne(id: string) {
+        return this.prisma.user.findUnique({
+            where: { id },
+        });
+    }
+}
