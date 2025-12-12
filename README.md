@@ -13,6 +13,11 @@
   - CRUD básico para gestión de usuarios.
   - Modelo de datos con campos: `id`, `email`, `name`, `lastname`, `role`.
   - Autenticación delegada (sin persistencia de password local).
+- **Módulo de Wallets:**
+  - Gestión de billeteras por usuario y moneda.
+  - Validación de unicidad (una wallet por moneda por usuario).
+  - Operaciones atómicas para actualización de saldos (`increment`).
+  - Seguridad integrada: Solo el propietario puede ver o editar sus wallets.
 - **Configuración de Base de Datos:**
   - Estructura de esquemas modular en `prisma/schema/`.
   - Configuración centralizada en `prisma.config.ts`.

@@ -1,0 +1,10 @@
+model Currency {
+    id         Int      @id @default(autoincrement())
+    code       String   @unique
+    name       String
+    isTradable Boolean  @default(true)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @default(now()) @updatedAt
+
+    wallets Wallet[]
+}
