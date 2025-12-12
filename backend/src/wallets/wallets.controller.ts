@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request, UseGuards, Patch, Delete } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth/supabase-auth.guard';
+import { UpdateWalletDto } from './dto/update-wallet.dto';
 
 @Controller('wallets')
 @UseGuards(SupabaseAuthGuard)
@@ -10,7 +11,7 @@ export class WalletsController {
 
     @Post()
     create(@Body() createWalletDto: CreateWalletDto, @Request() req) {
-        return this.walletsService.create(createWalletDto, req.user.sub);
+        return this.walletsService.create(req.user.sub, createWalletDto);
     }
 
     @Get()
@@ -28,14 +29,14 @@ export class WalletsController {
         return this.walletsService.findOne(id);
     }
 
-    // @Patch(':id')
-    // update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto) {
-    //   return this.walletsService.update(id, updateWalletDto);
-    // }
+    @Patch(':id')
+    update(@Param('id') id: string, @Request() req, @Body() updateWalletDto: UpdateWalletDto) {
+        return this.walletsService.update(req.user.sub, id, updateWalletDto);
+    }
 
-    // @Delete(':id')
-    // remove(@Param('id') id: string) {
-    //   return this.walletsService.remove(id);
-    // }
+    @Delete(':id')
+    remove(@Param('id') id: string, @Request() req) {
+        return this.walletsService.remove(req.user.sub, id);
+    }
 }
 

@@ -7,7 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class WalletsService {
     constructor(private readonly prisma: PrismaService) { }
 
-    create(createWalletDto: CreateWalletDto, userId: string) {
+    create(userId: string, createWalletDto: CreateWalletDto) {
         return this.prisma.wallet.create({
             data: {
                 userId,
@@ -34,11 +34,16 @@ export class WalletsService {
         });
     }
 
-    // update(id: string, updateWalletDto: UpdateWalletDto) {
-    //   return `This action updates a #${id} wallet`;
-    // }
+    update(userId: string, id: string, updateWalletDto: UpdateWalletDto) {
+        return this.prisma.wallet.update({
+            where: { id, userId },
+            data: updateWalletDto,
+        });
+    }
 
-    // remove(id: string) {
-    //   return `This action removes a #${id} wallet`;
-    // }
+    remove(userId: string, id: string) {
+        return this.prisma.wallet.delete({
+            where: { id, userId },
+        });
+    }
 }
