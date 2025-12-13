@@ -37,7 +37,7 @@ export default function SignUpScreen() {
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
-                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 50 }}
+                contentContainerStyle={styles.contentContainer}
                 bottomOffset={120}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}

@@ -1,11 +1,20 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 export const authStyles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 20,
         backgroundColor: '#4B3D58',
+    },
+    contentContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        paddingBottom: 50,
+        paddingHorizontal: 20,
+        ...(Platform.OS === 'web' || Platform.OS === 'windows' || Platform.OS === 'macos' ? {
+            width: '100%',
+            maxWidth: 500,
+            alignSelf: 'center',
+        } : {})
     },
     logo: {
         backgroundColor: '#D5D5D5',

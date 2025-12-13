@@ -32,7 +32,14 @@ export default function Dashboard() {
         <View style={styles.content} />
 
         {/* Bottom Taskbar */}
-        <View style={[styles.taskbar, { paddingBottom: insets.bottom }]}>
+        <View style={[
+          styles.taskbar,
+          {
+            paddingBottom: Math.max(insets.bottom, 10),
+            paddingTop: 10,
+            minHeight: 60 + insets.bottom
+          }
+        ]}>
           <TouchableOpacity style={styles.startButton} onPress={logout}>
             <View style={styles.iconFrame}>
               <Logo width={30} height={30} color="#FFC857" />
@@ -58,12 +65,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   taskbar: {
-    height: 80,
     backgroundColor: '#4B3D58', // Matches the purple tone in the image taskbar
     borderTopWidth: 4,
     borderTopColor: '#2C2C3E', // Dark border top
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     paddingHorizontal: 25,
     paddingVertical: 0
