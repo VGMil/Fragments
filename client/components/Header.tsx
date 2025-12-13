@@ -3,7 +3,11 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BatteryDisplay } from './BatteryDisplay';
 
-export const Header = () => {
+interface HeaderProps {
+    transparent?: boolean;
+}
+
+export const Header = ({ transparent }: HeaderProps) => {
     const insets = useSafeAreaInsets();
     const [date, setDate] = useState(new Date());
 
@@ -29,7 +33,11 @@ export const Header = () => {
     };
 
     return (
-        <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={[
+            styles.container,
+            { paddingTop: insets.top },
+            transparent && { backgroundColor: 'transparent' }
+        ]}>
             <View style={styles.content}>
                 <View style={styles.leftSection}>
                     <Text style={styles.text}>FRAGMENTS</Text>
@@ -37,7 +45,7 @@ export const Header = () => {
                 <Text style={styles.text}>{getFormattedDate(date)}</Text>
                 {Platform.OS === 'ios' || Platform.OS === 'android' ? <BatteryDisplay /> : null}
             </View>
-            <View style={styles.borderBottom} />
+            {!transparent && <View style={styles.borderBottom} />}
         </View>
     );
 };

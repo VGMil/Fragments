@@ -10,10 +10,11 @@ import { Button } from '../../components/Button';
 
 import Logo from '../../assets/images/owner/logo.svg';
 import { User, Mail, Lock } from 'lucide-react-native';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SignUpScreen() {
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
+    const { signUp, loading } = useAuth();
 
     const [name, setName] = useState('');
     const [lastname, setLastname] = useState('');
@@ -21,27 +22,14 @@ export default function SignUpScreen() {
     const [password, setPassword] = useState('');
 
     const handleSignup = async () => {
-        // Basic validation
         if (!email || !password || !name) {
-            // We could use a pixel-art styled Alert later, for now standard is fine
             alert('Por favor completa los campos obligatorios');
             return;
         }
 
-        setLoading(true);
         try {
-            console.log('Signup attempt:', email);
-            // TODO: Connect to backend
-            // const response = await api.post('/users/signup', { ... });
-
-            setTimeout(() => {
-                setLoading(false);
-                // alert('Simulando registro exitoso.');
-                // router.replace('/(tabs)'); // Or whatever next screen
-            }, 1000);
-
+            await signUp(name, lastname, email, password);
         } catch (error) {
-            setLoading(false);
             alert('Falló el registro');
         }
     };

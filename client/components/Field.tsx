@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        fontFamily: 'Courier', // Monospace for that terminal feel
+        fontFamily: 'VT323_400Regular', // Monospace for that terminal feel
         fontSize: 16,
         paddingHorizontal: 12,
         color: '#232336',

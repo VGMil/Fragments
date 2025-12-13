@@ -28,9 +28,13 @@ export const BatteryDisplay = () => {
             setBatteryState(batteryState);
         });
 
+        // Polling interval for robust updates (every 10 seconds)
+        const timer = setInterval(getBatteryStatus, 10000);
+
         return () => {
             levelSubscription?.remove();
             stateSubscription?.remove();
+            clearInterval(timer);
         };
     }, []);
 

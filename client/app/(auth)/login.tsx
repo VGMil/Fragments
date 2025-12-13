@@ -10,12 +10,13 @@ import { Button } from '../../components/Button';
 
 import Logo from '../../assets/images/owner/logo.svg';
 import { Mail, Lock } from 'lucide-react-native';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const { signIn, loading } = useAuth();
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -23,22 +24,8 @@ export default function LoginScreen() {
             return;
         }
 
-        setLoading(true);
-        try {
-            console.log('Login attempt:', email);
-            // TODO: Conectar con backend real
-            // const response = await api.post('/users/signin', { email, password });
+        await signIn(email, password, () => router.replace('/'));
 
-            setTimeout(() => {
-                setLoading(false);
-                Alert.alert('Info', 'Simulando login exitoso. Falta conectar API.');
-                // router.replace('/');
-            }, 1000);
-
-        } catch (error) {
-            setLoading(false);
-            Alert.alert('Error', 'Falló el inicio de sesión');
-        }
     };
 
     return (
