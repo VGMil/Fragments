@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
-// import { api } from '../../services/api'; // Integración pendiente
+// import { api } from '../../services/api'; 
 import { authStyles as styles } from '../../styles/auth.styles';
+import { Window } from '../../components/Window';
+import { Field } from '../../components/Field';
+import { Button } from '../../components/Button';
+
+import Logo from '../../assets/images/owner/logo.svg';
+import { User, Mail, Lock } from 'lucide-react-native';
 
 export default function SignUpScreen() {
     const router = useRouter();
@@ -14,96 +21,96 @@ export default function SignUpScreen() {
     const [password, setPassword] = useState('');
 
     const handleSignup = async () => {
+        // Basic validation
         if (!email || !password || !name) {
-            Alert.alert('Error', 'Por favor completa los campos obligatorios');
+            // We could use a pixel-art styled Alert later, for now standard is fine
+            alert('Por favor completa los campos obligatorios');
             return;
         }
 
         setLoading(true);
         try {
             console.log('Signup attempt:', email);
-            // TODO: Conectar con backend real
+            // TODO: Connect to backend
             // const response = await api.post('/users/signup', { ... });
 
             setTimeout(() => {
                 setLoading(false);
-                Alert.alert('Info', 'Simulando registro exitoso. Falta conectar API.');
+                // alert('Simulando registro exitoso.');
+                // router.replace('/(tabs)'); // Or whatever next screen
             }, 1000);
 
         } catch (error) {
             setLoading(false);
-            Alert.alert('Error', 'Falló el registro');
+            alert('Falló el registro');
         }
     };
 
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} style={{ backgroundColor: '#fff' }}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Crear Cuenta</Text>
-                <Text style={styles.subtitle}>Únete a Fragments hoy</Text>
+        <View style={styles.container}>
+            <KeyboardAwareScrollView
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 50 }}
+                bottomOffset={120}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
 
-                <View style={styles.form}>
-                    <Text style={styles.label}>Nombre *</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Tu nombre"
-                        placeholderTextColor="#999"
-                        value={name}
-                        onChangeText={setName}
-                    />
+            >
+                <Window title="NEW PLAYER" hasExitButton={true} onExit={() => router.back()}>
+                    <View style={styles.logo}>
+                        <Logo width={80} height={80} color="#232336" />
+                    </View>
 
-                    <Text style={styles.label}>Apellido</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Tu apellido"
-                        placeholderTextColor="#999"
-                        value={lastname}
-                        onChangeText={setLastname}
-                    />
+                    <View style={{ gap: 15 }}>
+                        <Field
+                            label="NAME *"
+                            value={name}
+                            onChangeText={setName}
+                            placeholder="YOUR NAME"
+                            icon={User}
+                        />
 
-                    <Text style={styles.label}>Correo Electrónico *</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="ejemplo@correo.com"
-                        placeholderTextColor="#999"
-                        value={email}
-                        onChangeText={setEmail}
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                    />
+                        <Field
+                            label="LASTNAME"
+                            value={lastname}
+                            onChangeText={setLastname}
+                            placeholder="YOUR LASTNAME"
+                            icon={User}
+                        />
 
-                    <Text style={styles.label}>Contraseña *</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Al menos 6 caracteres"
-                        placeholderTextColor="#999"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                    />
+                        <Field
+                            label="EMAIL *"
+                            value={email}
+                            onChangeText={setEmail}
+                            placeholder="user@example.com"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            icon={Mail}
+                        />
 
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleSignup}
-                        disabled={loading}
-                    >
-                        {loading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.buttonText}>Registrarme</Text>
-                        )}
-                    </TouchableOpacity>
+                        <Field
+                            label="PASSWORD *"
+                            value={password}
+                            onChangeText={setPassword}
+                            placeholder="********"
+                            secureTextEntry
+                            icon={Lock}
+                        />
 
-                    <View style={styles.footer}>
-                        <Text style={styles.footerText}>¿Ya tienes cuenta? </Text>
-                        <Link href="/login" asChild>
-                            <TouchableOpacity>
-                                <Text style={styles.link}>Ingresa aquí</Text>
-                            </TouchableOpacity>
+                        <Button
+                            title="CREATE ACCOUNT"
+                            onPress={handleSignup}
+                            loading={loading}
+                            style={{ marginTop: 10 }}
+                        />
+                    </View>
+
+                    <View style={{ marginTop: 15, gap: 10 }}>
+                        <Link href="/login" style={styles.link}>
+                            <Text>Ya tienes una cuenta? &gt;</Text>
                         </Link>
                     </View>
-                </View>
-            </View>
-        </ScrollView>
+                </Window>
+            </KeyboardAwareScrollView>
+        </View>
     );
 }

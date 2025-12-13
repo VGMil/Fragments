@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
 // import { api } from '../../services/api'; // Integración pendiente
 import { authStyles as styles } from '../../styles/auth.styles';
+import { Window } from '../../components/Window';
+import { Field } from '../../components/Field';
+import { Button } from '../../components/Button';
+
+import Logo from '../../assets/images/owner/logo.svg';
+import { Mail, Lock } from 'lucide-react-native';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -36,52 +43,52 @@ export default function LoginScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Fragments</Text>
-            <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+            <KeyboardAwareScrollView
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 50 }}
+                bottomOffset={120}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+                <Window title="LOGIN" hasExitButton={true} onExit={() => router.back()}>
+                    <View style={styles.logo}>
+                        <Logo width={80} height={80} color="#232336" />
+                    </View>
 
-            <View style={styles.form}>
-                <Text style={styles.label}>Correo Electrónico</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="ejemplo@correo.com"
-                    placeholderTextColor="#999"
-                    value={email}
-                    onChangeText={setEmail}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                />
+                    <View style={{ gap: 15 }}>
+                        <Field
+                            label="EMAIL"
+                            value={email}
+                            onChangeText={setEmail}
+                            placeholder="user@example.com"
+                            autoCapitalize="none"
+                            icon={Mail}
+                        />
 
-                <Text style={styles.label}>Contraseña</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="********"
-                    placeholderTextColor="#999"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
+                        <Field
+                            label="PASSWORD"
+                            value={password}
+                            onChangeText={setPassword}
+                            placeholder="********"
+                            secureTextEntry
+                            icon={Lock}
+                        />
 
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleLogin}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <Text style={styles.buttonText}>Ingresar</Text>
-                    )}
-                </TouchableOpacity>
+                        <Button
+                            title="START GAME"
+                            onPress={handleLogin}
+                            loading={loading}
+                            style={{ marginTop: 10 }}
+                        />
+                    </View>
 
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>¿No tienes cuenta? </Text>
-                    <Link href="/signup" asChild>
-                        <TouchableOpacity>
-                            <Text style={styles.link}>Regístrate</Text>
-                        </TouchableOpacity>
-                    </Link>
-                </View>
-            </View>
+                    <View style={{ marginTop: 15, gap: 10 }}>
+                        <Text style={styles.text}>Olvidaste tu contraseña?</Text>
+                        <Link href="/signup" style={styles.link}>
+                            <Text>Registrate &gt;</Text>
+                        </Link>
+                    </View>
+                </Window>
+            </KeyboardAwareScrollView>
         </View>
     );
 }
