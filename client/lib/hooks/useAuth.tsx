@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Alert } from 'react-native';
 import { authApi } from '../services/auth/auth.service';
-import { session } from '../services/session/session.service';
+import { useSession } from './useSession';
 
 interface AuthHook {
     loading: boolean;
@@ -10,15 +9,15 @@ interface AuthHook {
     logout: (payload: () => void) => Promise<void>;
 }
 
-
 export const useAuth = (): AuthHook => {
-    const [loading, setLoading] = useState(false);
+    const { saveSession, removeSession, setIsLoading, isLoading } = useSession();
+
     const signIn = async (email: string, password: string, payload: any) => {
         try {
-            setLoading(true);
+            setIsLoading(true);
             const data = await authApi.signIn(email, password);
-            if (data) {
-                session.setToken(data.session.access_token);
+            if (data?.session?.access_token) {
+                await saveSession(data.session.access_token);
                 payload();
             }
         } catch (error: any) {
@@ -26,13 +25,13 @@ export const useAuth = (): AuthHook => {
             const message = error.response?.data?.message || 'Error al iniciar sesión';
             Alert.alert('Error', message);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     const signUp = async (name: string, lastname: string, email: string, password: string, payload: any) => {
         try {
-            setLoading(true);
+            setIsLoading(true);
             await authApi.signUp(name, lastname, email, password);
             payload();
         } catch (error: any) {
@@ -40,21 +39,21 @@ export const useAuth = (): AuthHook => {
             const message = error.response?.data?.message || 'Error al registrarse';
             Alert.alert('Error', message);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     const logout = async (payload: any) => {
         try {
-            setLoading(true);
+            setIsLoading(true);
             await authApi.logout();
         } catch (error: any) {
             const message = error.response?.data?.message || 'Error al cerrar sesión';
-            Alert.alert('Error', message);
+            console.warn(message);
         } finally {
-            await session.clear();
+            await removeSession();
             payload();
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -62,6 +61,6 @@ export const useAuth = (): AuthHook => {
         signIn,
         signUp,
         logout,
-        loading,
+        loading: isLoading,
     };
 };

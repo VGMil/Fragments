@@ -8,6 +8,7 @@ import { VT323_400Regular } from '@expo-google-fonts/vt323';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import { SessionProvider } from "@/lib/context/session.provider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,8 +41,10 @@ export default function RootLayout() {
   }
 
   return (
-    <KeyboardProvider>
-      <RootScreen />
-    </KeyboardProvider>
+    <SessionProvider>
+      <KeyboardProvider>
+        <RootScreen />
+      </KeyboardProvider>
+    </SessionProvider>
   )
 }
