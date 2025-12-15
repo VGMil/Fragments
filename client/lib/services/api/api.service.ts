@@ -2,30 +2,29 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-const axiosInstance = axios.create({
-    baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
 export class ApiService {
-    private api: AxiosInstance = axiosInstance;
+    private api: AxiosInstance;
 
-    constructor() {
+    constructor(private getToken?: () => Promise<string | null>) {
         if (!API_URL) {
             console.warn('⚠️ EXPO_PUBLIC_API_URL no está definido. Las peticiones pueden fallar.');
         }
-    }
+        this.api = axios.create({
+            baseURL: API_URL,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-    setToken(token: string) {
-        this.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
-    getToken() {
-        return this.api.defaults.headers.common['Authorization'];
-    }
-    clearToken() {
-        delete this.api.defaults.headers.common['Authorization'];
+        if (this.getToken) {
+            this.api.interceptors.request.use(async (config) => {
+                const token = await this.getToken!();
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+                return config;
+            });
+        }
     }
 
     async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {

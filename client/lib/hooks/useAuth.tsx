@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import { authApi } from '../services/api/endpoints/auth.service';
-import { session } from '../services/session/session.class';
+import { authApi } from '../services/auth/auth.service';
+import { session } from '../services/session/session.service';
 
 interface AuthHook {
     loading: boolean;
@@ -18,7 +18,7 @@ export const useAuth = (): AuthHook => {
             setLoading(true);
             const data = await authApi.signIn(email, password);
             if (data) {
-                session.setToken(data);
+                session.setToken(data.session.access_token);
                 payload();
             }
         } catch (error: any) {
@@ -45,9 +45,17 @@ export const useAuth = (): AuthHook => {
     };
 
     const logout = async (payload: any) => {
-        session.clear();
-        authApi.clearToken();
-        payload();
+        try {
+            setLoading(true);
+            await authApi.logout();
+        } catch (error: any) {
+            const message = error.response?.data?.message || 'Error al cerrar sesión';
+            Alert.alert('Error', message);
+        } finally {
+            await session.clear();
+            payload();
+            setLoading(false);
+        }
     };
 
     return {
