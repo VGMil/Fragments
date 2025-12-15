@@ -10,7 +10,7 @@ import { Button } from '../../components/Button';
 
 import Logo from '../../assets/images/owner/logo.svg';
 import { User, Mail, Lock } from 'lucide-react-native';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function SignUpScreen() {
     const router = useRouter();
@@ -28,7 +28,7 @@ export default function SignUpScreen() {
         }
 
         try {
-            await signUp(name, lastname, email, password);
+            await signUp(name, lastname, email, password, () => router.replace('/login'));
         } catch (error) {
             alert('Falló el registro');
         }

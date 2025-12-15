@@ -10,7 +10,7 @@ import { Button } from '../../components/Button';
 
 import Logo from '../../assets/images/owner/logo.svg';
 import { Mail, Lock } from 'lucide-react-native';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function LoginScreen() {
     const router = useRouter();

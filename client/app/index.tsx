@@ -3,14 +3,14 @@ import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, 
 import { Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../assets/images/owner/logo.svg";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../lib/hooks/useAuth";
 import { Header } from "../components/Header";
 
 const { width } = Dimensions.get('window');
 
 export default function Dashboard() {
   const insets = useSafeAreaInsets();
-  const { logout } = useAuth();
+
 
   return (
     <View style={styles.container}>
@@ -40,7 +40,7 @@ export default function Dashboard() {
             minHeight: 60 + insets.bottom
           }
         ]}>
-          <TouchableOpacity style={styles.startButton} onPress={logout}>
+          <TouchableOpacity style={styles.startButton}>
             <View style={styles.iconFrame}>
               <Logo width={30} height={30} color="#FFC857" />
             </View>
