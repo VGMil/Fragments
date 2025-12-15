@@ -3,10 +3,8 @@ import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, 
 import { router, Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../assets/images/owner/logo.svg";
-import { useAuth } from "../lib/hooks/useAuth";
-import { Header } from "../components/Header";
-
-const { width } = Dimensions.get('window');
+import { useAuth } from "../../lib/hooks/useAuth";
+import { Header } from "../../components/Header";
 
 export default function Dashboard() {
   const insets = useSafeAreaInsets();
