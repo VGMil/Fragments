@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, Platform } from "react-native";
 import { router, Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Logo from "../assets/images/owner/logo.svg";
+import Logo from "../../assets/images/owner/logo.svg";
 import { useAuth } from "../../lib/hooks/useAuth";
 import { Header } from "../../components/Header";
 
@@ -15,7 +15,7 @@ export default function Dashboard() {
       <Stack.Screen options={{ headerShown: false }} />
 
       <ImageBackground
-        source={require('../assets/images/owner/background.webp')}
+        source={require('../../assets/images/owner/background.webp')}
         style={styles.background}
         imageStyle={{
           width: Platform.OS !== 'web' ? '200%' : '100%',

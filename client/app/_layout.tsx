@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { StatusBar, View } from "react-native";
 import { Header } from "../components/Header";
 import { useFonts } from 'expo-font';
@@ -9,15 +9,36 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SessionProvider } from "@/lib/context/session.provider";
+import { useSession } from "@/lib/hooks/useSession";
 
 SplashScreen.preventAutoHideAsync();
 
+import { useRouter, useSegments } from "expo-router";
+
 export const RootScreen = () => {
+  const { session, isLoading } = useSession();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const inAuthGroup = segments[0] === '(auth)';
+
+    if (!session && !inAuthGroup) {
+      router.replace('/login');
+    } else if (session && inAuthGroup) {
+      router.replace('/');
+    }
+  }, [session, isLoading, segments]);
+
+  if (isLoading) return null; // O un Splash Screen
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar hidden={true} />
       <Stack screenOptions={{ header: () => <Header /> }}>
-        <Stack.Screen name="(dashboard)" />
+        <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" />
       </Stack>
     </View>
@@ -39,6 +60,7 @@ export default function RootLayout() {
   if (!loaded && !error) {
     return null;
   }
+
 
   return (
     <SessionProvider>
