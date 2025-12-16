@@ -47,3 +47,20 @@
     ```bash
     npm run start:dev
     ```
+
+## Frontend (Mobile - Client)
+
+### Stack Tecnológico
+- **Framework:** Expo (React Native)
+- **Lenguaje:** TypeScript
+- **Cliente HTTP:** Axios (encapsulado en `ApiService`)
+- **Estilos:** StyleSheet nativos con sistema de diseño centralizado.
+
+### Funcionalidades Implementadas
+- **Autenticación Integrada:**
+  - Servicio centralizado (`auth.service.ts`) que consume los endpoints del backend.
+  - Hook personalizado `useAuth` para gestionar Login, Registro y Logout.
+  - Persistencia de sesión mediante manejo seguro de tokens.
+- **Pantallas:**
+  - Login y Signup completamente integrados.
+  - Navegación protegida basada en el estado de autenticación.
