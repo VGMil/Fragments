@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
-// import { api } from '../../services/api'; // Integración pendiente
+
 import { authStyles as styles } from '../../styles/auth.styles';
 import { Window } from '../../components/Window';
 import { Field } from '../../components/Field';
