@@ -8,6 +8,7 @@ export const authStyles = StyleSheet.create({
     contentContainer: {
         flexGrow: 1,
         justifyContent: 'center',
+        paddingTop: 25,
         paddingBottom: 50,
         paddingHorizontal: 20,
         ...(Platform.OS === 'web' || Platform.OS === 'windows' || Platform.OS === 'macos' ? {

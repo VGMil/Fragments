@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, Platform } from "react-native";
-import { router, Stack } from "expo-router";
+import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../../assets/images/owner/logo.svg";
 import { useAuth } from "../../lib/hooks/useAuth";
-import { Header } from "../../components/Header";
+
 
 export default function Dashboard() {
   const insets = useSafeAreaInsets();
@@ -12,8 +12,6 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
-
       <ImageBackground
         source={require('../../assets/images/owner/background.webp')}
         style={styles.background}
@@ -23,8 +21,7 @@ export default function Dashboard() {
         }}
         resizeMode="cover"
       >
-        {/* Reused Header Component */}
-        <Header transparent />
+
 
         {/* Main Content Area (Empty for now to show castle) */}
         <View style={styles.content} />
@@ -45,7 +42,7 @@ export default function Dashboard() {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-    </View>
+    </View >
   );
 }
 

@@ -37,8 +37,8 @@ export const RootScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar hidden={true} />
-      <Stack screenOptions={{ header: () => <Header /> }}>
-        <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(dashboard)" />
         <Stack.Screen name="(auth)" />
       </Stack>
     </View>

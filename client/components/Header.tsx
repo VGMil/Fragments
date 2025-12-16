@@ -54,6 +54,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#2C2C3E', // Dark pixel art blue/purple
         width: '100%',
+        zIndex: 100,
+
     },
     content: {
         flexDirection: 'row',

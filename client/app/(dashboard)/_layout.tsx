@@ -1,8 +1,12 @@
 import React from "react";
 import { Stack } from "expo-router";
+import { Header } from "../../components/Header";
 
 export default function DashboardLayout() {
-    return <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+    return <Stack screenOptions={{
+        header: () => <Header transparent />,
+        headerTransparent: true
+    }}>
+        <Stack.Screen name="index" />
     </Stack>
 }
