@@ -1,48 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, Platform } from "react-native";
-import { router } from "expo-router";
+import { View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Logo from "../../assets/images/owner/logo.svg";
 import { useAuth } from "../../lib/hooks/useAuth";
-
+import { Screen } from "../../components/Screen";
+import { router } from "expo-router";
+import { Button } from "@/components/Button";
 
 export default function Dashboard() {
   const insets = useSafeAreaInsets();
   const { logout } = useAuth();
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../../assets/images/owner/background.webp')}
-        style={styles.background}
-        imageStyle={{
-          width: Platform.OS !== 'web' ? '200%' : '100%',
-          left: Platform.OS !== 'web' ? '-60%' : '0%',
-        }}
-        resizeMode="cover"
-      >
-
-
-        {/* Main Content Area (Empty for now to show castle) */}
-        <View style={styles.content} />
-
-        {/* Bottom Taskbar */}
-        <View style={[
-          styles.taskbar,
-          {
-            paddingBottom: Math.max(insets.bottom, 10),
-            paddingTop: 10,
-            minHeight: 60 + insets.bottom
-          }
-        ]}>
-          <TouchableOpacity style={styles.startButton} onPress={() => { logout(() => { router.replace('/login') }) }}>
-            <View style={styles.iconFrame}>
-              <Logo width={30} height={30} color="#FFC857" />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </View >
+    <Screen>
+      <View>
+        <Text>Dashboard</Text>
+        <Button title="Logout" onPress={() => logout(() => router.replace('/login'))} />
+      </View>
+    </Screen >
   );
 }
 

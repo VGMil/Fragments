@@ -1,85 +1,96 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BatteryDisplay } from './BatteryDisplay';
 
 interface HeaderProps {
     transparent?: boolean;
 }
 
+const Panel = ({ children, style, borderColor = '#333' }: { children: React.ReactNode, style?: any, borderColor?: string }) => (
+    <View style={[styles.panel, { borderColor }, style]}>
+        {children}
+    </View>
+);
+
 export const Header = ({ transparent }: HeaderProps) => {
     const insets = useSafeAreaInsets();
-    const [date, setDate] = useState(new Date());
-
-    useEffect(() => {
-        const timer = setInterval(() => setDate(new Date()), 1000 * 60); // Update every minute
-        return () => clearInterval(timer);
-    }, []);
-
-    const getFormattedDate = (date: Date) => {
-        const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-        const dayName = days[date.getDay()];
-
-        let hours = date.getHours();
-        const minutes = date.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-
-        const strMinutes = minutes < 10 ? '0' + minutes : minutes;
-
-        return `${dayName} ${hours}:${strMinutes} ${ampm}`;
-    };
 
     return (
         <View style={[
             styles.container,
-            { paddingTop: insets.top },
+            { paddingTop: Math.max(insets.top, 5) },
             transparent && { backgroundColor: 'transparent' }
         ]}>
             <View style={styles.content}>
-                <View style={styles.leftSection}>
-                    <Text style={styles.text}>FRAGMENTS</Text>
-                </View>
-                <Text style={styles.text}>{getFormattedDate(date)}</Text>
-                {Platform.OS === 'ios' || Platform.OS === 'android' ? <BatteryDisplay /> : null}
+                <Panel borderColor="#00FFFF" style={styles.systemPanel}>
+                    <Text style={styles.systemText}>FRAGMENTS_OS ONLINE</Text>
+                    <View style={styles.activeDot} />
+                </Panel>
             </View>
-            {!transparent && <View style={styles.borderBottom} />}
+            {!transparent && <View style={styles.glowLine} />}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#2C2C3E', // Dark pixel art blue/purple
-        width: '100%',
+        backgroundColor: '#050510',
         zIndex: 100,
-
+        paddingBottom: 5,
     },
     content: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
-        paddingVertical: 15,
     },
-    leftSection: {
+    panel: {
+        backgroundColor: '#111122',
+        borderWidth: 1,
+        borderRadius: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 15,
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    text: {
-        color: '#ECECFA', // Off-white/Ghost white
-        fontFamily: 'VT323_400Regular',
-        fontSize: 24,
-        letterSpacing: 0,
-        textTransform: 'uppercase',
-        includeFontPadding: false,
-        textAlignVertical: 'center',
-    },
-    borderBottom: {
-        height: 4,
-        backgroundColor: '#151520', // Darker shadow for "3D" pixel effect or just a border
+        justifyContent: 'center',
         width: '100%',
+        ...Platform.select({
+            web: { boxShadow: '0 0 5px rgba(0, 255, 255, 0.3)' },
+            default: { elevation: 2 }
+        })
+    },
+    systemPanel: {
+        borderColor: '#00FFFF',
+        gap: 10,
+    },
+    systemText: {
+        color: '#00FFFF',
+        fontSize: 12,
+        lineHeight: 14, // Explicit line height
+        fontFamily: 'PressStart2P_400Regular',
+        textAlign: 'center',
+        textAlignVertical: 'center', // Android alignment
+        includeFontPadding: false, // Remove extra font padding on Android
+        letterSpacing: 2,
+        textShadowColor: '#00FFFF',
+        textShadowRadius: 2,
+    },
+    activeDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: '#00FF00',
+        shadowColor: '#00FF00',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+    },
+    glowLine: {
+        alignSelf: 'center',
+        width: '100%',
+        height: 1,
+        backgroundColor: '#00FFFF',
+        marginTop: 5,
+        opacity: 0.2,
     }
 });

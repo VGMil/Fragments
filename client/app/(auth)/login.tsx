@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Platform } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
 
@@ -9,8 +9,10 @@ import { Field } from '../../components/Field';
 import { Button } from '../../components/Button';
 
 import Logo from '../../assets/images/owner/logo.svg';
-import { Mail, Lock } from 'lucide-react-native';
+import { Mail, Lock, Gem } from 'lucide-react-native';
 import { useAuth } from '@/lib/hooks/useAuth';
+
+import { Screen } from '../../components/Screen';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -29,16 +31,20 @@ export default function LoginScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <Screen>
             <KeyboardAwareScrollView
                 contentContainerStyle={styles.contentContainer}
                 bottomOffset={120}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
             >
-                <Window title="LOGIN" hasExitButton={true} onExit={() => router.back()}>
-                    <View style={styles.logo}>
-                        <Logo width={80} height={80} color="#232336" />
+                <Window title="// USER_AUTH v1.0" hasExitButton={true} onExit={() => router.back()}>
+
+                    <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                        <Gem size={64} color="#00FFFF" style={{ marginBottom: 10 }} />
+                        <Text style={styles.loginSubtitle}>
+                            {'FRAGMENTS SYSTEM'}
+                        </Text>
                     </View>
 
                     <View style={{ gap: 15 }}>
@@ -61,21 +67,28 @@ export default function LoginScreen() {
                         />
 
                         <Button
-                            title="START GAME"
+                            title="LOGIN"
                             onPress={handleLogin}
                             loading={loading}
-                            style={{ marginTop: 10 }}
+                            style={{ marginTop: 10, marginHorizontal: 25 }}
                         />
                     </View>
 
-                    <View style={{ marginTop: 15, gap: 10 }}>
-                        <Text style={styles.text}>Olvidaste tu contraseña?</Text>
+                    <View style={{ marginVertical: 15, gap: 5 }}>
+                        <View style={[styles.terminalLinkContainer, { marginTop: 0, marginBottom: 10 }]}>
+                            <Link href={"/not-found" as any} asChild>
+                                <TouchableOpacity>
+                                    <Text style={styles.terminalLinkText}>{'> OLVIDASTE_TU_PASSWORD?'}</Text>
+                                    <Text style={styles.terminalLinkDecoration}>{'---------------------'}</Text>
+                                </TouchableOpacity>
+                            </Link>
+                        </View>
                         <Link href="/signup" style={styles.link}>
-                            <Text>Registrate &gt;</Text>
+                            <Text>{' REGISTRAR NUEVO AGENTE >'}</Text>
                         </Link>
                     </View>
                 </Window>
             </KeyboardAwareScrollView>
-        </View>
+        </Screen>
     );
 }

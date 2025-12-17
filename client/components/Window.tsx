@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
-import { Folder, X } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ViewProps, Platform } from 'react-native';
+// Replaced icons with simple text or shapes if needed, keeping it minimal as per the generic "Window" requirement
+import { X } from 'lucide-react-native';
 
 interface WindowProps extends ViewProps {
     title: string;
@@ -9,118 +10,171 @@ interface WindowProps extends ViewProps {
     onExit?: () => void;
 }
 
+const Corner = ({ style }: { style: any }) => (
+    <View style={[styles.corner, style]}>
+        <View style={styles.cornerBolt} />
+    </View>
+);
+
 export const Window = ({ title, children, hasExitButton = false, onExit, style, ...props }: WindowProps) => {
 
     return (
         <View style={[styles.container, style]} {...props}>
-            {/* Header Row */}
+            {/* Corner Decorations */}
+            <Corner style={styles.topLeft} />
+            <Corner style={styles.topRight} />
+            <Corner style={styles.bottomLeft} />
+            <Corner style={styles.bottomRight} />
+
+            {/* Glowing Borders (simulated with absolute views if platform doesn't support thorough box-shadow) */}
+            <View style={styles.glowFrame} pointerEvents="none" />
+
+            {/* Header Content */}
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
-                    <Folder size={20} color="#ECECFA" style={styles.icon} />
-                    <Text style={styles.titleText}>/ {title}</Text>
+                    {/* Double line decoration for header */}
+                    <View style={styles.headerDecorationLine} />
+                    <View style={styles.headerDecorationLine} />
+                    {/* Title Text (Absolute or overlaid?) - For now simpler text */}
+                    {/* <Text style={styles.titleText}>{title}</Text> */}
+                </View>
+
+                {/* Title overlaps the lines? Or sits between? Let's put text on top */}
+                <View style={styles.titleWrapper}>
+                    <Text style={styles.titleText}>{title}</Text>
                 </View>
 
                 {hasExitButton && (
-                    <TouchableOpacity onPress={onExit} style={styles.exitButton} activeOpacity={0.8}>
-                        <X size={18} color="white" />
+                    <TouchableOpacity onPress={onExit} style={styles.exitButton}>
+                        <X size={16} color="#00FFFF" />
                     </TouchableOpacity>
                 )}
             </View>
 
             {/* Main Window Content */}
-            <View style={styles.windowFrame}>
-                <View style={styles.content}>
-                    {children}
-                </View>
-                {/* Footer Bar Decoration */}
-                <View style={styles.footer}>
-                    <View style={styles.footerLineDark} />
-                    <View style={styles.footerLineLight} />
-                </View>
+            <View style={styles.content}>
+                {children}
             </View>
         </View>
     );
 };
 
+const NEON_COLOR = '#00FFFF'; // Cyan
+const FRAME_BG = 'rgba(20, 20, 30, 0.85)'; // Dark semi-transparent
+const CORNER_SIZE = 16;
+
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        flex: 1,
-        borderColor: '#232336',
-        borderTopWidth: 3,
-        borderBottomWidth: 5,
-        borderLeftWidth: 3,
-        borderRightWidth: 7,
-
+        backgroundColor: FRAME_BG,
+        borderWidth: 2,
+        borderColor: NEON_COLOR,
+        padding: 4, // Padding for inner content vs frame
+        position: 'relative',
+        // Glow effect
+        ...Platform.select({
+            web: {
+                boxShadow: `0 0 15px ${NEON_COLOR}, inset 0 0 10px ${NEON_COLOR}40`,
+            },
+            default: {
+                shadowColor: NEON_COLOR,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.8,
+                shadowRadius: 10,
+                elevation: 10,
+            }
+        })
     },
+    glowFrame: {
+        ...StyleSheet.absoluteFillObject,
+        borderWidth: 1,
+        borderColor: NEON_COLOR,
+        opacity: 0.5,
+        margin: -4, // Expand slightly? or just match
+    },
+    // Corners
+    corner: {
+        position: 'absolute',
+        width: CORNER_SIZE,
+        height: CORNER_SIZE,
+        backgroundColor: '#2C2C3E', // Dark grey metal
+        borderColor: NEON_COLOR,
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+    },
+    cornerBolt: {
+        width: 4,
+        height: 4,
+        borderRadius: 2,
+        backgroundColor: '#555', // Bolt color
+    },
+    topLeft: { top: -2, left: -2, borderTopWidth: 2, borderLeftWidth: 2 },
+    topRight: { top: -2, right: -2, borderTopWidth: 2, borderRightWidth: 2 },
+    bottomLeft: { bottom: -2, left: -2, borderBottomWidth: 2, borderLeftWidth: 2 },
+    bottomRight: { bottom: -2, right: -2, borderBottomWidth: 2, borderRightWidth: 2 },
+
+    // Header
     header: {
+        height: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#232336',
-        padding: 5,
+        paddingHorizontal: 20,
+        marginBottom: 5,
+        position: 'relative',
     },
     titleContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        height: '100%',
+        marginRight: 10,
     },
-    icon: {
-        marginRight: 8,
+    headerDecorationLine: {
+        height: 2,
+        backgroundColor: NEON_COLOR,
+        width: '100%',
+        marginVertical: 2,
+        opacity: 0.6,
+        shadowColor: NEON_COLOR,
+        shadowRadius: 4,
+        shadowOpacity: 0.8,
+    },
+    titleWrapper: {
+        position: 'absolute',
+        left: 20,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        backgroundColor: FRAME_BG, // Hide lines behind text
+        paddingHorizontal: 10,
     },
     titleText: {
-        color: '#ECECFA',
-        fontFamily: 'PressStart2P_400Regular',
-        fontSize: 16, // Reduced size for Press Start 2P as it is wider
+        color: NEON_COLOR,
+        fontSize: 14,
+        fontWeight: 'bold',
         textTransform: 'uppercase',
-        letterSpacing: 0,
-        lineHeight: 20,
+        letterSpacing: 2,
+        textShadowColor: NEON_COLOR,
+        textShadowRadius: 10,
+        textShadowOffset: { width: 0, height: 0 },
+        fontFamily: Platform.OS === 'web' ? 'monospace' : 'PressStart2P_400Regular',
     },
     exitButton: {
-        backgroundColor: '#FF4444',
-        width: 28,
-        height: 28,
+        width: 30,
+        height: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 2,
-        borderColor: 'white',
-        // Shadow for pixel effect
-        shadowColor: '#000',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 0,
-        elevation: 4,
-    },
-    windowFrame: {
-        backgroundColor: '#EAD4AA', // Beige color from image
-        width: '100%',
-        flex: 1, // Fill remaining space inside container
+        borderWidth: 1,
+        borderColor: NEON_COLOR,
+        backgroundColor: 'rgba(0, 255, 255, 0.1)',
+        zIndex: 20,
     },
     content: {
         flex: 1,
-        padding: 20,
-    },
-    footer: {
-        height: 24,
-        width: '100%',
-        justifyContent: 'flex-end',
-        paddingBottom: 4,
         paddingHorizontal: 10,
-        backgroundColor: '#D6A33A', // Gold/Darker beige
-        borderTopWidth: 2,
-        borderTopColor: '#9C772C', // Darker line
+        paddingBottom: 10,
     },
-    footerLineDark: {
-        height: 4,
-        backgroundColor: '#9C772C',
-        width: '100%',
-        marginBottom: 2,
-        opacity: 0.5,
-    },
-    footerLineLight: {
-        height: 2,
-        backgroundColor: '#F0E6D2',
-        width: '100%',
-        opacity: 0.3,
-    }
 });

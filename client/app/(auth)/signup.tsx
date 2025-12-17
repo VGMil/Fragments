@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
 // import { api } from '../../services/api'; 
@@ -11,6 +11,7 @@ import { Button } from '../../components/Button';
 import Logo from '../../assets/images/owner/logo.svg';
 import { User, Mail, Lock } from 'lucide-react-native';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { Screen } from '@/components/Screen';
 
 export default function SignUpScreen() {
     const router = useRouter();
@@ -35,7 +36,7 @@ export default function SignUpScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <Screen>
             <KeyboardAwareScrollView
                 contentContainerStyle={styles.contentContainer}
                 bottomOffset={120}
@@ -43,18 +44,16 @@ export default function SignUpScreen() {
                 showsVerticalScrollIndicator={false}
 
             >
-                <Window title="NEW PLAYER" hasExitButton={true} onExit={() => router.back()}>
-                    <View style={styles.logo}>
-                        <Logo width={80} height={80} color="#232336" />
-                    </View>
+                <Window title="NEW AGENT" hasExitButton={true} onExit={() => router.back()}>
 
                     <View style={{ gap: 15 }}>
                         <Field
-                            label="NAME *"
+                            label="NAME"
                             value={name}
                             onChangeText={setName}
                             placeholder="YOUR NAME"
                             icon={User}
+                            required
                         />
 
                         <Field
@@ -63,25 +62,28 @@ export default function SignUpScreen() {
                             onChangeText={setLastname}
                             placeholder="YOUR LASTNAME"
                             icon={User}
+                            required
                         />
 
                         <Field
-                            label="EMAIL *"
+                            label="EMAIL"
                             value={email}
                             onChangeText={setEmail}
                             placeholder="user@example.com"
                             autoCapitalize="none"
                             keyboardType="email-address"
                             icon={Mail}
+                            required
                         />
 
                         <Field
-                            label="PASSWORD *"
+                            label="PASSWORD"
                             value={password}
                             onChangeText={setPassword}
                             placeholder="********"
                             secureTextEntry
                             icon={Lock}
+                            required
                         />
 
                         <Button
@@ -92,13 +94,20 @@ export default function SignUpScreen() {
                         />
                     </View>
 
-                    <View style={{ marginTop: 15, gap: 10 }}>
-                        <Link href="/login" style={styles.link}>
-                            <Text>Ya tienes una cuenta? &gt;</Text>
+                    <View style={styles.terminalLinkContainer}>
+                        <Link href="/login" asChild>
+                            <TouchableOpacity>
+                                <Text style={styles.terminalLinkText}>
+                                    {'> YA_TIENES_CUENTA?'}
+                                </Text>
+                                <Text style={styles.terminalLinkDecoration}>
+                                    {'-------------------'}
+                                </Text>
+                            </TouchableOpacity>
                         </Link>
                     </View>
                 </Window>
             </KeyboardAwareScrollView>
-        </View>
+        </Screen>
     );
 }
