@@ -25,8 +25,8 @@ export const Field = ({ label, required, style, onFocus, onBlur, ...props }: Fie
             {/* Label Row */}
             <Text style={styles.label}>
                 {'>'} {label}
-                {required && <Text style={{ color: '#FF69B4', marginLeft: 5, textShadowColor: '#FF69B4', textShadowRadius: 2 }}>*</Text>}
                 :
+                {required && <Text style={{ color: 'white', textShadowColor: 'white', textShadowRadius: 2 }}> *</Text>}
             </Text>
 
             {/* Input Row */}
@@ -48,7 +48,7 @@ export const Field = ({ label, required, style, onFocus, onBlur, ...props }: Fie
     );
 };
 
-const TERMINAL_GREEN = '#33FF33'; // Classic bright green
+const TERMINAL_GREEN = '#04ca9f'; // Classic bright green
 const BG_COLOR = '#050505'; // Almost black
 
 const styles = StyleSheet.create({
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
         color: TERMINAL_GREEN,
         marginBottom: 5,
         textShadowRadius: 2,
+
     },
     terminalLine: {
         flexDirection: 'row',
