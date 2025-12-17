@@ -38,7 +38,8 @@ export default function SignUpScreen() {
         }
 
         try {
-            await signUp(name, lastname, email, password, () => handleNavigate('/login'));
+            await signUp(name, lastname, email, password);
+            handleNavigate('/login');
         } catch (error) {
             alert('Falló el registro');
         }

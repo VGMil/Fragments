@@ -14,7 +14,7 @@ export default function Dashboard() {
     <Screen>
       <View>
         <Text>Dashboard</Text>
-        <Button title="Logout" onPress={() => logout(() => router.replace('/login'))} />
+        <Button title="Logout" onPress={() => logout()} />
       </View>
     </Screen >
   );

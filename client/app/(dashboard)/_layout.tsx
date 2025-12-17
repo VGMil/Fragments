@@ -7,6 +7,6 @@ export default function DashboardLayout() {
         header: () => <Header transparent />,
         headerTransparent: true
     }}>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="home" />
     </Stack>
 }

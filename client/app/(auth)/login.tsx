@@ -13,14 +13,15 @@ import { useAuth } from '@/lib/hooks/useAuth';
 
 import { Screen } from '../../components/Screen';
 import { CRTTransition } from '../../components/CRTTransition';
+import { LoginLoader } from '../../components/auth/LoginLoader';
 
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn, loading } = useAuth();
-
     const [isExiting, setIsExiting] = useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
     const nextRoute = React.useRef<any>(null);
 
     const handleNavigate = (route: string) => {
@@ -29,14 +30,11 @@ export default function LoginScreen() {
     };
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            Alert.alert('Error', 'Por favor ingresa correo y contraseña');
-            return;
-        }
-
-        await signIn(email, password, () => handleNavigate('/'));
+        setIsLoggingIn(true);
     };
-
+    if (isLoggingIn) {
+        return <LoginLoader visible={isLoggingIn} email={email} password={password} onComplete={() => setIsLoggingIn(false)} />;
+    }
     return (
         <CRTTransition
             isExiting={isExiting}

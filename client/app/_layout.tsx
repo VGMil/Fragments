@@ -24,7 +24,7 @@ export const RootScreen = () => {
     if (!session && !inAuthGroup) {
       router.replace('/login');
     } else if (session && inAuthGroup) {
-      router.replace('/');
+      router.replace('/home');
     }
   }, [session, isLoading, segments]);
 
