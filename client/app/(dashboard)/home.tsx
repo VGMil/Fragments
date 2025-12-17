@@ -5,16 +5,24 @@ import { useAuth } from "../../lib/hooks/useAuth";
 import { Screen } from "../../components/Screen";
 import { router } from "expo-router";
 import { Button } from "@/components/Button";
+import { LogoutLoader } from "@/components/auth/LogoutLoader";
 
 export default function Dashboard() {
   const insets = useSafeAreaInsets();
-  const { logout } = useAuth();
+  const [showLogoutLoader, setShowLogoutLoader] = useState(false);
+  const handleLogout = () => {
+    setShowLogoutLoader(true);
+  }
+
+  if (showLogoutLoader) {
+    return <LogoutLoader visible={showLogoutLoader} onComplete={() => setShowLogoutLoader(false)} />;
+  }
 
   return (
     <Screen>
       <View>
         <Text>Dashboard</Text>
-        <Button title="Logout" onPress={() => logout()} />
+        <Button title="Logout" onPress={handleLogout} />
       </View>
     </Screen >
   );

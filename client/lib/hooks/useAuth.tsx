@@ -50,7 +50,6 @@ export const useAuth = (): AuthHook => {
             const message = error.response?.data?.message || 'Error al cerrar sesión';
             throw new Error(message);
         } finally {
-            await removeSession();
             setIsLoading(false);
         }
     };
