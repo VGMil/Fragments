@@ -2,17 +2,28 @@ import { ConflictException, Injectable, NotFoundException, BadRequestException }
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from 'src/generated/prisma/client';
+
+interface WalletService {
+    create(data: CreateWalletDto, tx?: Prisma.TransactionClient): Promise<any>;
+    findAll(tx?: Prisma.TransactionClient): Promise<any[]>;
+    findAllByUserId(userId: string, tx?: Prisma.TransactionClient): Promise<any[]>;
+    findOne(userId: string, id: string, tx?: Prisma.TransactionClient): Promise<any>;
+    update(userId: string, id: string, updateWalletDto: UpdateWalletDto, tx?: Prisma.TransactionClient): Promise<any>;
+    remove(userId: string, id: string, tx?: Prisma.TransactionClient): Promise<any>;
+}
 
 @Injectable()
-export class WalletsService {
+export class WalletsService implements WalletService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async create(userId: string, createWalletDto: CreateWalletDto) {
-        const existingWallet = await this.prisma.wallet.findUnique({
+    async create(data: CreateWalletDto, tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
+        const existingWallet = await client.wallet.findUnique({
             where: {
                 userId_currencyId: {
-                    userId,
-                    currencyId: createWalletDto.currencyId,
+                    userId: data.userId,
+                    currencyId: data.currencyId,
                 },
             },
         });
@@ -21,33 +32,38 @@ export class WalletsService {
             throw new ConflictException('El usuario ya tiene una wallet para esta moneda');
         }
 
-        return this.prisma.wallet.create({
+        return client.wallet.create({
             data: {
-                userId,
-                currencyId: createWalletDto.currencyId,
+                userId: data.userId,
+                currencyId: data.currencyId,
+                balance: 0,
             },
         });
     }
 
-    findAll() {
-        return this.prisma.wallet.findMany();
+    findAll(tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
+        return client.wallet.findMany();
     }
 
-    findAllByUserId(userId: string) {
-        return this.prisma.wallet.findMany({
+    findAllByUserId(userId: string, tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
+        return client.wallet.findMany({
             where: { userId },
             include: { currency: true },
         });
     }
 
-    findOne(userId: string, id: string) {
-        return this.prisma.wallet.findUnique({
+    findOne(userId: string, id: string, tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
+        return client.wallet.findUnique({
             where: { id, userId },
             include: { currency: true },
         });
     }
 
-    async update(userId: string, id: string, updateWalletDto: UpdateWalletDto) {
+    async update(userId: string, id: string, updateWalletDto: UpdateWalletDto, tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
         const wallet = await this.findOne(userId, id);
 
         if (!wallet) {
@@ -59,7 +75,7 @@ export class WalletsService {
             throw new BadRequestException('Saldo insuficiente');
         }
 
-        return this.prisma.wallet.update({
+        return client.wallet.update({
             where: { id, userId },
             data: {
                 balance: {
@@ -69,8 +85,9 @@ export class WalletsService {
         });
     }
 
-    remove(userId: string, id: string) {
-        return this.prisma.wallet.delete({
+    remove(userId: string, id: string, tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
+        return client.wallet.delete({
             where: { id, userId },
         });
     }
