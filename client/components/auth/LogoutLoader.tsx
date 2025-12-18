@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { PrinterLines } from '../PrinterLines';
 import { useSession } from '@/lib/hooks/useSession';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 
 interface LogoutLoaderProps {
     visible: boolean;
@@ -72,6 +72,7 @@ export const LogoutLoader = ({ visible, onComplete }: LogoutLoaderProps) => {
                     if (isMounted.current) {
                         removeSession();
                         onComplete?.();
+                        router.replace('/login');
                     }
                 }, 1500);
             }

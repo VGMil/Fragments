@@ -16,7 +16,7 @@ export const Screen = ({ children, style, hasHeader = false, ...props }: ScreenP
             {...props}
         >
             <ScrollView
-                style={[hasHeader && { marginTop: 70 }, styles.scrollView]}
+                style={[styles.scrollView]}
                 showsVerticalScrollIndicator={false}
             >
                 {children}
@@ -42,6 +42,6 @@ const styles = StyleSheet.create({
     scrollView: {
         width: '100%',
         height: '100%',
-
+        marginTop: 70
     },
 });

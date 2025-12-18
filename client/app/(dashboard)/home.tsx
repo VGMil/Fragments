@@ -19,7 +19,7 @@ export default function Dashboard() {
   }
 
   return (
-    <Screen>
+    <Screen hasHeader>
       <View>
         <Text>Dashboard</Text>
         <Button title="Logout" onPress={handleLogout} />

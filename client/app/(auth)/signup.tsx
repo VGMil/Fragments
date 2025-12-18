@@ -8,6 +8,8 @@ import { Window } from '../../components/Window';
 import { Field } from '../../components/Field';
 import { Button } from '../../components/Button';
 import { Switch } from '../../components/Switch';
+import { usePopup } from '@/lib/hooks/usePopup';
+
 
 
 import Logo from '../../assets/images/owner/logo.svg';
@@ -26,7 +28,8 @@ export default function SignUpScreen() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-
+    // Popup Hook
+    const { showPopup, Popup } = usePopup();
     const [isExiting, setIsExiting] = useState(false);
     const nextRoute = React.useRef<any>(null);
 
@@ -37,17 +40,17 @@ export default function SignUpScreen() {
 
     const handleSignup = async () => {
         if (!email || !password || !name) {
-            alert('Por favor completa los campos obligatorios');
+            showPopup('warning', 'MISSING_DATA', 'Por favor completa los campos obligatorios.');
             return;
         }
-
         try {
             await signUp(name, lastname, email, password);
             handleNavigate('/login');
         } catch (error) {
-            alert('Falló el registro');
+            showPopup('error', 'ERROR', 'No se pudo completar el registro. Intente nuevamente.');
         }
     };
+
 
     return (
         <CRTTransition
@@ -136,6 +139,9 @@ export default function SignUpScreen() {
                     </Window>
                 </KeyboardAwareScrollView>
             </Screen>
+
+
+            <Popup />
         </CRTTransition>
     );
 }

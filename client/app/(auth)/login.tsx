@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
 
@@ -8,6 +9,8 @@ import { Window } from '../../components/Window';
 import { Field } from '../../components/Field';
 import { Button } from '../../components/Button';
 import { Switch } from '../../components/Switch';
+import { usePopup } from '@/lib/hooks/usePopup';
+
 
 
 import { Mail, Lock, Gem } from 'lucide-react-native';
@@ -22,6 +25,8 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const { showPopup, Popup } = usePopup();
+
 
     const { signIn, loading } = useAuth();
     const [isExiting, setIsExiting] = useState(false);
@@ -35,9 +40,7 @@ export default function LoginScreen() {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            Platform.OS === 'web' ?
-                alert('Por favor, completa todos los campos') :
-                Alert.alert('FRAGMENTS', 'Por favor, completa todos los campos');
+            showPopup('warning', 'MISSING_DATA', 'Por favor, completa todos los campos');
             return;
         }
         setIsLoggingIn(true);
@@ -119,6 +122,7 @@ export default function LoginScreen() {
                     </Window>
                 </KeyboardAwareScrollView>
             </Screen>
+            <Popup />
         </CRTTransition>
     );
 }
