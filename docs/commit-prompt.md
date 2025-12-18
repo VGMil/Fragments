@@ -39,7 +39,7 @@ El mensaje debe ser generado por la IA siguiendo el formato que se encuentra a c
 ]
 
 ## ✅ Estructura de Documentación y Formato Final
-El archivo de documentación en docs/commits/ debe seguir esta plantilla para la trazabilidad:
+El archivo de documentación en (raiz del proyecto)/docs/commits/ debe seguir esta plantilla para la trazabilidad:
 
 ### Formato de Plantilla (.md)
 Markdown

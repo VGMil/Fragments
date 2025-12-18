@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
 // import { api } from '../../services/api'; 
@@ -7,10 +7,16 @@ import { authStyles as styles } from '../../styles/auth.styles';
 import { Window } from '../../components/Window';
 import { Field } from '../../components/Field';
 import { Button } from '../../components/Button';
+import { Switch } from '../../components/Switch';
+import { usePopup } from '@/lib/hooks/usePopup';
+
+
 
 import Logo from '../../assets/images/owner/logo.svg';
 import { User, Mail, Lock } from 'lucide-react-native';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { Screen } from '@/components/Screen';
+import { CRTTransition } from '../../components/CRTTransition';
 
 export default function SignUpScreen() {
     const router = useRouter();
@@ -20,85 +26,122 @@ export default function SignUpScreen() {
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+    // Popup Hook
+    const { showPopup, Popup } = usePopup();
+    const [isExiting, setIsExiting] = useState(false);
+    const nextRoute = React.useRef<any>(null);
+
+    const handleNavigate = (route: string) => {
+        nextRoute.current = route;
+        setIsExiting(true);
+    };
 
     const handleSignup = async () => {
         if (!email || !password || !name) {
-            alert('Por favor completa los campos obligatorios');
+            showPopup('warning', 'MISSING_DATA', 'Por favor completa los campos obligatorios.');
             return;
         }
-
         try {
-            await signUp(name, lastname, email, password, () => router.replace('/login'));
+            await signUp(name, lastname, email, password);
+            handleNavigate('/login');
         } catch (error) {
-            alert('Falló el registro');
+            showPopup('error', 'ERROR', 'No se pudo completar el registro. Intente nuevamente.');
         }
     };
 
+
     return (
-        <View style={styles.container}>
-            <KeyboardAwareScrollView
-                contentContainerStyle={styles.contentContainer}
-                bottomOffset={120}
-                keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={false}
+        <CRTTransition
+            isExiting={isExiting}
+            onExitComplete={() => {
+                if (nextRoute.current) {
+                    router.replace(nextRoute.current);
+                }
+            }}
+        >
+            <Screen>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={styles.contentContainer}
+                    bottomOffset={120}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
 
-            >
-                <Window title="NEW PLAYER" hasExitButton={true} onExit={() => router.back()}>
-                    <View style={styles.logo}>
-                        <Logo width={80} height={80} color="#232336" />
-                    </View>
+                >
+                    <Window title="NEW AGENT" hasExitButton={true} onExit={() => router.back()}>
 
-                    <View style={{ gap: 15 }}>
-                        <Field
-                            label="NAME *"
-                            value={name}
-                            onChangeText={setName}
-                            placeholder="YOUR NAME"
-                            icon={User}
-                        />
+                        <View style={{ gap: 15 }}>
+                            <Field
+                                label="NAME"
+                                value={name}
+                                onChangeText={setName}
+                                placeholder="YOUR NAME"
+                                icon={User}
+                                required
+                            />
 
-                        <Field
-                            label="LASTNAME"
-                            value={lastname}
-                            onChangeText={setLastname}
-                            placeholder="YOUR LASTNAME"
-                            icon={User}
-                        />
+                            <Field
+                                label="LASTNAME"
+                                value={lastname}
+                                onChangeText={setLastname}
+                                placeholder="YOUR LASTNAME"
+                                icon={User}
+                            />
 
-                        <Field
-                            label="EMAIL *"
-                            value={email}
-                            onChangeText={setEmail}
-                            placeholder="user@example.com"
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                            icon={Mail}
-                        />
+                            <Field
+                                label="EMAIL"
+                                value={email}
+                                onChangeText={setEmail}
+                                placeholder="user@example.com"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                icon={Mail}
+                                required
+                            />
 
-                        <Field
-                            label="PASSWORD *"
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholder="********"
-                            secureTextEntry
-                            icon={Lock}
-                        />
+                            <Field
+                                label="PASSWORD"
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholder="********"
+                                secureTextEntry={!showPassword}
+                                icon={Lock}
+                                required
+                            />
 
-                        <Button
-                            title="CREATE ACCOUNT"
-                            onPress={handleSignup}
-                            loading={loading}
-                            style={{ marginTop: 10 }}
-                        />
-                    </View>
+                            <View style={{ marginTop: -25, marginBottom: 5 }}>
+                                <Switch
+                                    value={showPassword}
+                                    onValueChange={setShowPassword}
+                                    label="SHOW_PASSWORD?"
+                                />
+                            </View>
 
-                    <View style={{ marginTop: 15, gap: 10 }}>
-                        <Link href="/login" style={styles.link}>
-                            <Text>Ya tienes una cuenta? &gt;</Text>
-                        </Link>
-                    </View>
-                </Window>
-            </KeyboardAwareScrollView>
-        </View>
+                            <Button
+                                title="CREATE ACCOUNT"
+                                onPress={handleSignup}
+                                loading={loading}
+                                style={{ marginTop: 10 }}
+                            />
+                        </View>
+
+                        <View style={styles.terminalLinkContainer}>
+                            <TouchableOpacity onPress={() => handleNavigate('/login')}>
+                                <Text style={styles.terminalLinkText}>
+                                    {'> YA_TIENES_CUENTA?'}
+                                </Text>
+                                <Text style={styles.terminalLinkDecoration}>
+                                    {'-------------------'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Window>
+                </KeyboardAwareScrollView>
+            </Screen>
+
+
+            <Popup />
+        </CRTTransition>
     );
 }

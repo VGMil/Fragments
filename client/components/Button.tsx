@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet, TouchableOpacityProps, ActivityIndicator } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, TouchableOpacityProps, ActivityIndicator, View, Platform } from 'react-native';
 
 interface ButtonProps extends TouchableOpacityProps {
     title: string;
@@ -16,61 +16,88 @@ export const Button = ({ title, variant = 'primary', loading = false, style, dis
                 disabled && styles.disabledContainer,
                 style
             ]}
-            activeOpacity={0.8}
+            activeOpacity={0.7}
             disabled={disabled || loading}
             {...props}
         >
-            {loading ? (
-                <ActivityIndicator color="#232336" />
-            ) : (
-                <Text style={[
-                    styles.text,
-                    variant === 'secondary' && styles.secondaryText,
-                    disabled && styles.disabledText
-                ]}>{title}</Text>
-            )}
+            {/* Inner "Highlight" Border for 3D effect */}
+            <View style={styles.innerBevel}>
+                {loading ? (
+                    <ActivityIndicator color="#000033" />
+                ) : (
+                    <Text style={[
+                        styles.text,
+                        variant === 'secondary' && styles.secondaryText,
+                        disabled && styles.disabledText
+                    ]}>
+                        [ {title} ]
+                    </Text>
+                )}
+            </View>
         </TouchableOpacity>
     );
 };
 
+const MAIN_COLOR = '#00FFFF'; // Electric Cyan
+const SHADOW_COLOR = '#003333'; // Dark Cyan/Black for 3D depth
+const GLOW_COLOR = '#00FFFF'; // Same as main for the glow
+
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFC857',
-        paddingTop: 17,    // +1px (vs 16) to compensate for top border (3px) vs bottom (5px)
-        paddingBottom: 15, // -1px
-        paddingLeft: 28,   // +4px (vs 24) to compensate for left border (3px) vs right (7px)
-        paddingRight: 20,  // -4px
-        alignItems: 'center',
+        backgroundColor: MAIN_COLOR,
+        padding: 2,
+        alignItems: 'stretch',
         justifyContent: 'center',
-        borderColor: '#232336',
-        borderTopWidth: 3,
-        borderBottomWidth: 5,
-        borderLeftWidth: 3,
-        borderRightWidth: 7,
-        // Elevation/Shadow for 3D feel could be added, but flat fits the provided image better
+        borderColor: SHADOW_COLOR,
+        borderWidth: 2,
+        borderRadius: 2,
+        marginBottom: 10,
+        borderBottomWidth: 6,
+        borderBottomColor: SHADOW_COLOR,
+        shadowColor: GLOW_COLOR,
+        shadowOffset: { width: 0, height: 0 }, // Center glow
+        shadowOpacity: 1, // Max intensity
+        shadowRadius: 10, // Spread
+        elevation: 10,
+    },
+    innerBevel: {
+        backgroundColor: MAIN_COLOR,
+        borderTopWidth: 2,
+        borderTopColor: '#E0FFFF', // Almost white cyan
+        borderLeftWidth: 2,
+        borderLeftColor: '#E0FFFF',
+        borderRightWidth: 2,
+        borderRightColor: '#00CCCC', // Darker cyan
+        borderBottomWidth: 2,
+        borderBottomColor: '#00CCCC',
+        paddingVertical: 12,
+        alignItems: 'center',
     },
     secondaryContainer: {
         backgroundColor: 'transparent',
-        borderColor: '#232336',
-        borderTopWidth: 3,
-        borderBottomWidth: 5,
-        borderLeftWidth: 3,
-        borderRightWidth: 7,
+        borderColor: MAIN_COLOR,
+        borderWidth: 2,
+        // No 3D bottom for ghost button
+        borderBottomWidth: 2,
+        borderBottomColor: MAIN_COLOR,
     },
     disabledContainer: {
-        backgroundColor: '#D5D5D5',
+        backgroundColor: '#555555',
+        borderColor: '#333333',
         opacity: 0.8,
     },
     text: {
         fontFamily: 'PressStart2P_400Regular',
-        fontSize: 14, // Good size for button text
-        color: '#232336', // Dark text on yellow background
+        fontSize: 14, // Reduced slightly to fit pixel font spacing
+        color: '#000033', // Dark text on bright button
         textTransform: 'uppercase',
         textAlign: 'center',
-        letterSpacing: 0,
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+        letterSpacing: 2, // Increased for pixel font readability
     },
     secondaryText: {
-        color: '#ECECFA',
+        color: MAIN_COLOR,
     },
     disabledText: {
         color: '#888',

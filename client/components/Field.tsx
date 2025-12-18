@@ -1,26 +1,46 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
-
-import { LucideIcon } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TextInputProps, Platform } from 'react-native';
 
 interface FieldProps extends TextInputProps {
     label: string;
-    icon?: LucideIcon;
+    icon?: any;
+    required?: boolean;
 }
 
-export const Field = ({ label, icon: Icon, style, ...props }: FieldProps) => {
+export const Field = ({ label, required, style, onFocus, onBlur, ...props }: FieldProps) => {
+    const [isFocused, setIsFocused] = useState(false);
+
+    const handleFocus = (e: any) => {
+        setIsFocused(true);
+        if (onFocus) onFocus(e);
+    };
+
+    const handleBlur = (e: any) => {
+        setIsFocused(false);
+        if (onBlur) onBlur(e);
+    };
+
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>{label}</Text>
-            <View style={styles.inputContainer}>
-                {/* Decorative Orange Block */}
-                <View style={styles.decorationChunk}>
-                    {Icon && <Icon size={20} color="#232336" />}
-                </View>
+            {/* Label Row */}
+            <Text style={styles.label}>
+                {'>'} {label}
+                :
+                {required && <Text style={{ color: 'white', textShadowColor: 'white', textShadowRadius: 2 }}> *</Text>}
+            </Text>
 
+            {/* Input Row */}
+            <View style={[styles.terminalLine, isFocused && styles.focusedLine]}>
                 <TextInput
                     style={[styles.input, style]}
-                    placeholderTextColor="#999"
+                    placeholderTextColor="#8899A6" // Faded grey for "ghost" effect
+                    selectionColor="#00FF00"
+                    cursorColor="#00FF00"
+                    underlineColorAndroid="transparent" // Remove native underline
+                    autoCorrect={false}
+                    spellCheck={false}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     {...props}
                 />
             </View>
@@ -28,43 +48,50 @@ export const Field = ({ label, icon: Icon, style, ...props }: FieldProps) => {
     );
 };
 
+const TERMINAL_GREEN = '#04ca9f'; // Classic bright green
+const BG_COLOR = '#050505'; // Almost black
+
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 15,
+        marginBottom: 15, // Increased spacing for vertical layout
+        // Removed border from container, now only on input
     },
     label: {
-        fontFamily: 'PressStart2P_400Regular',
-        fontSize: 12,
-        color: '#232336',
-        marginBottom: 8,
-        textTransform: 'uppercase',
+        fontFamily: 'VT323_400Regular',
+        fontSize: 20, // Increased for VT323
+        color: TERMINAL_GREEN,
+        marginBottom: 5,
+        textShadowRadius: 2,
+
     },
-    inputContainer: {
+    terminalLine: {
         flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
-        borderWidth: 4,
-        borderColor: '#232336',
-        borderTopWidth: 3,
-        borderBottomWidth: 5,
-        borderLeftWidth: 3,
-        borderRightWidth: 7,
-        height: 60,
-    },
-    decorationChunk: {
-        width: 30,
-        height: '100%',
-        backgroundColor: '#E59646', // Pixel art orange/gold
-        borderRightWidth: 4,
-        borderRightColor: '#232336',
-        justifyContent: 'center',
         alignItems: 'center',
+        paddingHorizontal: 10,
+        height: 50,
+        width: '100%',
+        backgroundColor: BG_COLOR,
+        borderWidth: 1,
+        borderColor: '#333',
     },
+    focusedLine: {
+        borderColor: TERMINAL_GREEN,
+        backgroundColor: '#001100',
+    },
+    // Removed old prompt style
     input: {
         flex: 1,
-        fontFamily: 'VT323_400Regular', // Monospace for that terminal feel
-        fontSize: 16,
-        paddingHorizontal: 12,
-        color: '#232336',
+        fontFamily: 'VT323_400Regular', // Input text font
+        fontSize: 20, // Increased for VT323
+        color: TERMINAL_GREEN,
         height: '100%',
+        textShadowColor: TERMINAL_GREEN,
+        textShadowRadius: 2,
+        ...(Platform.OS === 'web' ? {
+            outlineStyle: 'none',
+            boxShadow: '0 0 0px 1000px #050505 inset',
+            caretColor: TERMINAL_GREEN,
+            transition: 'background-color 50000s ease-in-out 0s',
+        } : {} as any),
     },
 });

@@ -64,3 +64,18 @@
 - **Pantallas:**
   - Login y Signup completamente integrados.
   - Navegación protegida basada en el estado de autenticación.
+
+### UI/UX & Estética
+- **Tema:** Cyberpunk / Retro-Terminal.
+- **Tipografía:**
+  - `Press Start 2P`: Usada para títulos principales y botones (Headers, Buttons).
+  - `VT323`: Usada para campos de entrada, texto de terminal y etiquetas.
+- **Componentes Personalizados:**
+  - `Window`: Contenedores con bordes de neón y esquinas reforzadas.
+  - `Field`: Inputs con estilo de línea de comandos, cursor de bloque y efectos de foco.
+  - `Screen`: Manejo global de fondos y áreas seguras con soporte para imágenes de fondo con opacidad.
+- **Paleta de Colores:**
+  - Cyan Neón (`#00FFFF`) para acentos principales y brillos.
+  - Verde Terminal (`#33FF33`) para texto de entrada y cursores.
+  - Rosa Chicle (`#FF69B4`) para indicadores de campos obligatorios.
+  - Gris Desvanecido (`#8899A6`) para textos secundarios y placeholders.
