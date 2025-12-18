@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { PrinterLines } from '../PrinterLines';
+import { ProgressBar } from '@/components/ProgressBar';
 import { useSession } from '@/lib/hooks/useSession';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Constants from 'expo-constants';
@@ -160,33 +161,7 @@ export const LoginLoader = ({ visible, onComplete, email, password }: LoginLoade
 
     if (!visible) return null;
 
-    const renderProgressBar = () => {
-        const filledBlocks = Math.floor((progress / 100) * LOADING_BLOCKS);
-        const blocks = [];
 
-        for (let i = 0; i < LOADING_BLOCKS; i++) {
-            blocks.push(
-                <View
-                    key={i}
-                    style={[
-                        styles.block,
-                        { backgroundColor: i < filledBlocks ? themeColor : '#1a1a1a' }
-                    ]}
-                />
-            );
-        }
-
-        return (
-            <View style={styles.progressWrapper}>
-                <View style={[styles.blocksContainer, { borderColor: themeColor }]}>
-                    {blocks}
-                </View>
-                <Text style={[styles.percentText, { color: themeColor, textShadowColor: themeColor }]}>
-                    LOADING: {Math.floor(progress)}%
-                </Text>
-            </View>
-        );
-    };
 
     return (
         <View style={styles.container}>
@@ -212,7 +187,11 @@ export const LoginLoader = ({ visible, onComplete, email, password }: LoginLoade
 
                         {(phase === 'loading' || phase === 'decision' || phase === 'finishing') && (
                             <View style={styles.loaderArea}>
-                                {renderProgressBar()}
+                                <ProgressBar
+                                    progress={progress}
+                                    themeColor={themeColor}
+                                    totalBlocks={LOADING_BLOCKS}
+                                />
                             </View>
                         )}
                     </>
@@ -245,24 +224,5 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: '100%',
     },
-    progressWrapper: {
-        width: '100%',
-    },
-    blocksContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height: 20,
-        marginBottom: 8,
-    },
-    block: {
-        width: '4%',
-        height: '100%',
-        borderRadius: 1,
-    },
-    percentText: {
-        fontFamily: 'VT323_400Regular',
-        fontSize: 18,
-        textAlign: 'right',
-        textShadowRadius: 4,
-    }
 });
+
