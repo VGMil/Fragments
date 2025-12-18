@@ -28,7 +28,7 @@ export class UsersController {
                 throw new ConflictException('El usuario ya existe.');
             }
 
-            return await this.usersService.signUp({
+            return await this.usersService.create({
                 id: user.id,
                 email: signUpUserDto.email,
                 name: signUpUserDto.name,
