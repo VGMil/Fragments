@@ -1,15 +1,12 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, ViewProps, Platform, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ImageBackground, StyleSheet, ViewProps, Platform, View, ScrollView, Dimensions } from 'react-native';
 
 interface ScreenProps extends ViewProps {
     children: React.ReactNode;
-    withPadding?: boolean;
+    hasHeader?: boolean;
 }
 
-export const Screen = ({ children, style, withPadding = false, ...props }: ScreenProps) => {
-    const insets = useSafeAreaInsets();
-
+export const Screen = ({ children, style, hasHeader = false, ...props }: ScreenProps) => {
     return (
         <ImageBackground
             source={require('../assets/images/owner/background.webp')}
@@ -18,9 +15,12 @@ export const Screen = ({ children, style, withPadding = false, ...props }: Scree
             resizeMode="cover"
             {...props}
         >
-            <View style={{ marginTop: 70 }}>
+            <ScrollView
+                style={[hasHeader && { marginTop: 70 }, styles.scrollView]}
+                showsVerticalScrollIndicator={false}
+            >
                 {children}
-            </View>
+            </ScrollView>
         </ImageBackground>
     );
 };
@@ -29,13 +29,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#050510', // Fallback
-        width: '100%',
-        height: '100%',
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
         position: 'relative',
+        alignItems: 'center',
     },
     image: {
         opacity: 0.4,
-        width: Platform.OS === 'web' ? '100%' : '100%',
-        left: Platform.OS === 'web' ? '0%' : '0%',
-    }
+        width: Dimensions.get('window').width,
+        left: '0%',
+    },
+    scrollView: {
+        width: '100%',
+        height: '100%',
+
+    },
 });

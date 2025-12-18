@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Platform } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Link } from 'expo-router';
 
@@ -7,6 +7,8 @@ import { authStyles as styles } from '../../styles/auth.styles';
 import { Window } from '../../components/Window';
 import { Field } from '../../components/Field';
 import { Button } from '../../components/Button';
+import { Switch } from '../../components/Switch';
+
 
 import { Mail, Lock, Gem } from 'lucide-react-native';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -19,6 +21,8 @@ export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
     const { signIn, loading } = useAuth();
     const [isExiting, setIsExiting] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -30,6 +34,12 @@ export default function LoginScreen() {
     };
 
     const handleLogin = async () => {
+        if (!email || !password) {
+            Platform.OS === 'web' ?
+                alert('Por favor, completa todos los campos') :
+                Alert.alert('FRAGMENTS', 'Por favor, completa todos los campos');
+            return;
+        }
         setIsLoggingIn(true);
     };
     if (isLoggingIn) {
@@ -75,9 +85,17 @@ export default function LoginScreen() {
                                 value={password}
                                 onChangeText={setPassword}
                                 placeholder="********"
-                                secureTextEntry
+                                secureTextEntry={!showPassword}
                                 icon={Lock}
                             />
+
+                            <View style={{ marginTop: -25, marginBottom: 5 }}>
+                                <Switch
+                                    value={showPassword}
+                                    onValueChange={setShowPassword}
+                                    label="SHOW_PASSWORD?"
+                                />
+                            </View>
 
                             <Button
                                 title="LOGIN"

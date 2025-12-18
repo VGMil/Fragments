@@ -7,6 +7,8 @@ import { authStyles as styles } from '../../styles/auth.styles';
 import { Window } from '../../components/Window';
 import { Field } from '../../components/Field';
 import { Button } from '../../components/Button';
+import { Switch } from '../../components/Switch';
+
 
 import Logo from '../../assets/images/owner/logo.svg';
 import { User, Mail, Lock } from 'lucide-react-native';
@@ -22,6 +24,8 @@ export default function SignUpScreen() {
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const [isExiting, setIsExiting] = useState(false);
     const nextRoute = React.useRef<any>(null);
@@ -98,10 +102,18 @@ export default function SignUpScreen() {
                                 value={password}
                                 onChangeText={setPassword}
                                 placeholder="********"
-                                secureTextEntry
+                                secureTextEntry={!showPassword}
                                 icon={Lock}
                                 required
                             />
+
+                            <View style={{ marginTop: -25, marginBottom: 5 }}>
+                                <Switch
+                                    value={showPassword}
+                                    onValueChange={setShowPassword}
+                                    label="SHOW_PASSWORD?"
+                                />
+                            </View>
 
                             <Button
                                 title="CREATE ACCOUNT"
