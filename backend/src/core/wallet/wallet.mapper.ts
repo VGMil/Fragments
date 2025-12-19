@@ -10,4 +10,13 @@ export class WalletMapper {
             prismaWallet.balance.toNumber()
         );
     }
+
+    static toDomainofSupabase(wallet: any): Wallet {
+        return new Wallet(
+            wallet.id,
+            wallet.userId,
+            wallet.currencyId,
+            wallet.balance
+        );
+    }
 }

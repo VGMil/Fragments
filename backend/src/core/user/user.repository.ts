@@ -2,9 +2,9 @@ import { CreateUserDto } from "./create-user-dto";
 import { User } from "./user.entity";
 import { Prisma } from "src/generated/prisma/client";
 
-export interface IUserRepository {
-    create(data: CreateUserDto, tx?: Prisma.TransactionClient): Promise<User>;
-    findAll(tx?: Prisma.TransactionClient): Promise<User[]>;
-    findOne(id: string, tx?: Prisma.TransactionClient): Promise<User | null>;
-    findByEmail(email: string, tx?: Prisma.TransactionClient): Promise<User | null>;
+export abstract class UserRepository {
+    abstract create(data: CreateUserDto, tx?: Prisma.TransactionClient): Promise<User>;
+    abstract findAll(tx?: Prisma.TransactionClient): Promise<User[]>;
+    abstract findOne(id: string, tx?: Prisma.TransactionClient): Promise<User | null>;
+    abstract findByEmail(email: string, tx?: Prisma.TransactionClient): Promise<User | null>;
 }
