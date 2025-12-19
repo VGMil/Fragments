@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from 'src/generated/prisma/client';
 import { WalletMapper } from './wallet.mapper';
 import { IWalletRepository } from './wallet.repository';
 import { Wallet } from './wallet.entity';
+import { PrismaProvider } from 'src/infrastructure/prisma/prisma.provider';
 
 @Injectable()
 export class WalletService implements IWalletRepository {
-    constructor(private prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaProvider) { }
 
     async findAll(tx?: Prisma.TransactionClient): Promise<Wallet[]> {
         const client = tx || this.prisma;

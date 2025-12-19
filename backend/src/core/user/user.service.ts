@@ -1,14 +1,16 @@
 
 import { Injectable, ConflictException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from './create-user-dto';
 import { Prisma } from 'src/generated/prisma/client';
 import { UsersMapper } from './users.mapper';
 import { IUserRepository } from './user.repository';
+import { PrismaProvider } from 'src/infrastructure/prisma/prisma.provider';
 
 @Injectable()
 export class UsersService implements IUserRepository {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaProvider
+    ) { }
 
     async create(data: CreateUserDto, tx?: Prisma.TransactionClient) {
         const client = tx || this.prisma;

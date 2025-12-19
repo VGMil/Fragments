@@ -1,14 +1,16 @@
 
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from 'src/generated/prisma/client';
 import { CurrenciesMapper } from './currencies.mapper';
 import { ICurrencyRepository } from './currency.repository';
 import { Currency } from './currency.entity';
+import { PrismaProvider } from 'src/infrastructure/prisma/prisma.provider';
 
 @Injectable()
 export class CurrenciesService implements ICurrencyRepository {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaProvider
+    ) { }
 
     async findAll(tx?: Prisma.TransactionClient): Promise<Currency[]> {
         const client = tx || this.prisma;
