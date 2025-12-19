@@ -23,6 +23,26 @@
   - Configuración centralizada en `prisma.config.ts`.
   - Conexión mediante `PrismaPg` adapter para compatibilidad con entornos Serverless/Edge.
 
+### Arquitectura de Software
+Utilizamos **Clean Architecture (Arquitectura Hexagonal)** para garantizar escalabilidad, testabilidad y desacoplamiento.
+
+#### 1. Capas del Sistema
+*   **Core (Dominio):** Contiene la lógica de negocio pura y las reglas del sistema.
+    *   *Entidades:* Clases TS planas (`User`, `Wallet`).
+    *   *Repositorios Abstractos:* Contratos (`WalletRepository`) que definen operaciones sin conocer la base de datos.
+    *   *Mappers:* Transforman datos crudos de Prisma/Supabase a Entidades de Dominio.
+*   **Features (Aplicación):** Agrupa funcionalidades por caso de uso.
+    *   *Use Cases:* Clases de servicio único (`RegisterUserUseCase`) que orquestan la lógica.
+    *   *DTOs:* Objetos de transferencia de datos validados estrictamente con `class-validator`.
+*   **Infrastructure (Adaptadores):** Implementaciones concretas de interfaces externas.
+    *   *PrismaProvider:* Implementación de repositorios usando PostgreSQL.
+    *   *SupabaseProvider:* Cliente de autenticación externo.
+
+#### 2. Patrones Implementados
+*   **Inyección de Dependencias:** Uso de clases abstractas como tokens para inyectar implementaciones concretas.
+*   **Transacciones Distribuidas:** Patrón de compensación (Saga/Rollback manual) para asegurar consistencia entre Supabase Auth y PostgreSQL local en el registro de usuarios.
+*   **Single Source of Truth:** El backend valida y sirve datos desde la base de datos local, usando Supabase solo como puerta de entrada (AuthN).
+
 ### Configuración Local
 1.  Clonar el repositorio.
 2.  Configurar variables de entorno en `.env`:
