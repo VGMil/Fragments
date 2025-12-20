@@ -1,6 +1,7 @@
 
 import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateUserDto } from './create-user-dto';
+import { UpdateUserDto } from './update-user.dto';
 import { Prisma } from 'src/generated/prisma/client';
 import { UsersMapper } from './users.mapper';
 import { UserRepository } from './user.repository';
@@ -47,5 +48,18 @@ export class UsersService extends UserRepository {
             where: { email },
         });
         return user ? UsersMapper.toDomain(user) : null;
+    }
+
+    async update(id: string, data: UpdateUserDto, tx?: Prisma.TransactionClient) {
+        const client = tx || this.prisma;
+        try {
+            const user = await client.user.update({
+                where: { id },
+                data: { ...data },
+            });
+            return UsersMapper.toDomain(user);
+        } catch (error) {
+            throw error;
+        }
     }
 }
