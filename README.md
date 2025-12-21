@@ -18,6 +18,10 @@
   - Validación de unicidad (una wallet por moneda por usuario).
   - Operaciones atómicas para actualización de saldos (`increment`).
   - Seguridad integrada: Solo el propietario puede ver o editar sus wallets.
+- **Módulo de Perfil:**
+  - Gestión centralizada de datos del usuario (`/profile/me`).
+  - Capacidad de actualización de información personal (Nombre, Apellido).
+  - Consulta unificada de saldos y monedas disponibles (`/profile/currencies`).
 - **Configuración de Base de Datos:**
   - Estructura de esquemas modular en `prisma/schema/`.
   - Configuración centralizada en `prisma.config.ts`.
