@@ -12,9 +12,6 @@ export const StateConnection = ({ connected = true, style, compact }: StateConne
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
 
-    // Use prop if provided, otherwise fallback to auto-detect mobile
-    const isCompact = compact !== undefined ? compact : isMobile;
-
     return (
         <View style={[
             styles.panel,
@@ -26,7 +23,7 @@ export const StateConnection = ({ connected = true, style, compact }: StateConne
                 isMobile && styles.systemTextMobile,
                 { color: connected ? '#00FFFF' : '#FF0000' }
             ]}>
-                {!isCompact ? 'FRAGMENTS_OS ' : ''}{connected ? 'ONLINE' : 'OFFLINE'}
+                FRAGMENTS_OS
             </Text>
             {connected ? (
                 <Wifi size={isMobile ? 14 : 16} color="#00FFFF" strokeWidth={2.5} />
@@ -39,13 +36,11 @@ export const StateConnection = ({ connected = true, style, compact }: StateConne
 
 const styles = StyleSheet.create({
     panel: {
-        paddingVertical: 4,
         paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 10,
-        backgroundColor: '#111122', // Ensuring background color is consistent
+        justifyContent: 'center',
+        gap: 8,
     },
     panelMobile: {
         paddingHorizontal: 8,
@@ -54,15 +49,18 @@ const styles = StyleSheet.create({
     },
     systemText: {
         fontSize: 12,
-        lineHeight: 14,
+        lineHeight: 16,
         fontFamily: 'PressStart2P_400Regular',
         textAlign: 'center',
         textAlignVertical: 'center',
         includeFontPadding: false,
         letterSpacing: 2,
+        paddingTop: 3,
     },
     systemTextMobile: {
-        fontSize: 10, // Smaller font for mobile
+        fontSize: 10,
+        lineHeight: 14,
         letterSpacing: 1,
+        paddingTop: 2,
     },
 });

@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Currencies } from './Currencies';
 import { StateConnection } from './StateConnection';
 import { OwnerSection } from './OwnerSection';
+import { BatteryDisplay } from './Battery';
 
 interface HeaderProps {
     transparent?: boolean;
@@ -22,43 +23,42 @@ export const Header = ({ transparent }: HeaderProps) => {
             !transparent && styles.borderBottom
         ]}>
             <View style={[styles.content, isMobile && styles.contentMobile]}>
+                {isMobile ? (
+                    <>
+                        <View style={styles.mobileTopRow}>
+                            <StateConnection connected={true} compact={false} />
+                            {Platform.OS !== 'web' && <BatteryDisplay />}
+                        </View>
 
-                {/* Desktop Absolute Center State */}
-                {!isMobile && (
-                    <View style={styles.desktopStateWrapper} pointerEvents="box-none">
-                        <StateConnection connected={true} />
-                    </View>
-                )}
-
-                {/* Mobile: Top Row for Status */}
-                {isMobile && (
-                    <View style={styles.mobileStatusRow}>
-                        <StateConnection
-                            connected={true}
-                            style={styles.mobileState}
-                            compact={false}
-                        />
-                    </View>
-                )}
-
-                {/* Main Row: Owner (Left) & Currencies (Right) */}
-                <View style={[styles.mainRow, isMobile && styles.mainRowMobile]}>
-                    <OwnerSection />
-
-                    {/* Right Side */}
-                    {isMobile ? (
-                        <View style={styles.mobileCurrencyWrapper}>
+                        <View style={styles.mobileMainRow}>
+                            <View style={{ transform: [{ scale: 0.9 }] }}>
+                                <OwnerSection />
+                            </View>
                             <Currencies ach={1000} frg={1000} />
                         </View>
-                    ) : (
-                        <View style={styles.currencyWrapper}>
-                            <Currencies ach={1000} frg={1000} />
+                    </>
+                ) : (
+                    <>
+                        <View style={styles.desktopStateWrapper} pointerEvents="box-none">
+                            <StateConnection connected={true} />
                         </View>
-                    )}
-                </View>
 
+                        <View style={styles.desktopLeftGroup}>
+                            <OwnerSection />
+                        </View>
+
+                        <View style={styles.desktopRightGroup}>
+                            <Currencies ach={1000} frg={1000} />
+                            {Platform.OS !== 'web' && (
+                                <>
+                                    <View style={styles.divider} />
+                                    <BatteryDisplay />
+                                </>
+                            )}
+                        </View>
+                    </>
+                )}
             </View>
-
             {!transparent && !isMobile && <View style={styles.glowLine} />}
         </View>
     );
@@ -80,51 +80,52 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         paddingVertical: 5,
-        position: 'relative',
+        position: 'relative', // Context for absolute center
     },
     contentMobile: {
         flexDirection: 'column',
-        alignItems: 'stretch',
-        gap: 8,
+        gap: 10,
+        paddingHorizontal: 15,
     },
 
-    // Rows
-    mobileStatusRow: {
-        flexDirection: 'row',
+    // --- Desktop Styles ---
+    desktopStateWrapper: {
+        ...StyleSheet.absoluteFillObject,
         justifyContent: 'center',
-        width: '100%',
-        marginBottom: 4,
+        alignItems: 'center',
+        zIndex: 0, // Behind interactive elements if any overlap, but pointerEvents="box-none" helps
     },
-    mainRow: {
+    desktopLeftGroup: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 20,
+        zIndex: 1,
+    },
+    desktopRightGroup: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 20,
+        zIndex: 1,
+    },
+    divider: {
+        width: 1,
+        height: 20,
+        backgroundColor: '#00FFFF',
+        opacity: 0.2,
+    },
+
+    // --- Mobile Styles ---
+    mobileTopRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
     },
-    mainRowMobile: {
+    mobileMainRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-    },
-
-    // Desktop Absolute Center
-    desktopStateWrapper: {
-        ...StyleSheet.absoluteFillObject,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1,
-    },
-
-    // Mobile Specifics
-    mobileState: {
-        transform: [{ scale: 0.9 }],
-        // alignSelf: 'flex-end', // Handled by container
-    },
-    mobileCurrencyWrapper: {
-        justifyContent: 'center',
-    },
-
-    // Desktop Currency Wrapper
-    currencyWrapper: {
-        zIndex: 2,
+        width: '100%',
     },
 
     glowLine: {
