@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 // Import local placeholder
-const placeholderSource = require('../../assets/images/owner/placeholder-avatar.webp');
+const placeholderSource = require('../../../assets/images/owner/placeholder-avatar.webp');
 
 interface PhotoProps {
     image?: string | null;

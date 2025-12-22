@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Currencies } from './Currencies';
 import { StateConnection } from './StateConnection';
-import { Photo } from './Photo';
+import { OwnerSection } from './OwnerSection';
 
 interface HeaderProps {
     transparent?: boolean;
@@ -13,16 +13,6 @@ export const Header = ({ transparent }: HeaderProps) => {
     const insets = useSafeAreaInsets();
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
-
-    const OwnerSection = () => (
-        <View style={styles.ownerContainer}>
-            <Photo image={''} />
-            <View style={styles.nameColumn}>
-                <Text style={styles.ownerTextPrimary}>Placeholder</Text>
-                <Text style={styles.ownerTextSecondary}>Owner</Text>
-            </View>
-        </View>
-    );
 
     return (
         <View style={[
@@ -121,30 +111,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 1,
-    },
-
-    // Owner Section
-    ownerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-    },
-    nameColumn: {
-        flexDirection: 'column',
-        gap: 4,
-    },
-    ownerTextPrimary: {
-        fontSize: 12,
-        fontFamily: 'PressStart2P_400Regular',
-        color: '#FFFFFF',
-        letterSpacing: 1,
-    },
-    ownerTextSecondary: {
-        fontSize: 10,
-        fontFamily: 'PressStart2P_400Regular',
-        color: '#00FFFF',
-        opacity: 0.8,
-        letterSpacing: 1,
     },
 
     // Mobile Specifics
