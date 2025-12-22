@@ -17,8 +17,8 @@ export const useAuth = (): AuthHook => {
         try {
             setIsLoading(true);
             const data = await authApi.signIn(email, password);
-            if (data?.session?.access_token) {
-                return data.session.access_token;
+            if (data?.accessToken) {
+                return data.accessToken;
             }
             throw new Error('No se recibió un token de sesión');
         } catch (error: any) {

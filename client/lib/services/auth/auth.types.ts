@@ -4,10 +4,13 @@ export interface AuthOptions {
     logout: () => Promise<LogoutResponse>;
 }
 export interface Response {
-    session: {
-        access_token: string;
-        expires_at: string;
-    };
+    user: {
+        id: string;
+        email: string;
+        name: string;
+        lastname: string;
+    },
+    accessToken: string;
 }
 
 export interface SignInResponse extends Response { }
