@@ -9,6 +9,7 @@ interface ScreenProps extends ViewProps {
 
 export const Screen = ({ children, style, hasHeader = false, ...props }: ScreenProps) => {
     const headerHeight = useHeaderHeight();
+
     return (
         <ImageBackground
             source={require('../assets/images/owner/background.webp')}
@@ -19,7 +20,10 @@ export const Screen = ({ children, style, hasHeader = false, ...props }: ScreenP
         >
             <ScrollView
                 style={styles.scrollView}
-                contentContainerStyle={{ paddingTop: headerHeight }}
+                contentContainerStyle={[
+                    { paddingTop: headerHeight },
+                    !hasHeader && styles.centerContent
+                ]}
                 showsVerticalScrollIndicator={false}
             >
                 {children}
@@ -36,7 +40,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         height: '100%',
-
     },
     image: {
         opacity: 0.4,
@@ -45,5 +48,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         paddingHorizontal: 20,
+    },
+    centerContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
     },
 });

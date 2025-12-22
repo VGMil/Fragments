@@ -10,9 +10,6 @@ import { Button } from '../../components/Button';
 import { Switch } from '../../components/Switch';
 import { usePopup } from '@/lib/hooks/usePopup';
 
-
-
-import Logo from '../../assets/images/owner/logo.svg';
 import { User, Mail, Lock } from 'lucide-react-native';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Screen } from '@/components/Screen';

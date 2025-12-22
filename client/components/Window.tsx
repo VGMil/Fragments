@@ -69,21 +69,8 @@ const styles = StyleSheet.create({
         backgroundColor: FRAME_BG,
         borderWidth: 2,
         borderColor: NEON_COLOR,
-        padding: 4, // Padding for inner content vs frame
+        padding: 12,
         position: 'relative',
-        // Glow effect
-        ...Platform.select({
-            web: {
-                boxShadow: `0 0 15px ${NEON_COLOR}, inset 0 0 10px ${NEON_COLOR}40`,
-            },
-            default: {
-                shadowColor: NEON_COLOR,
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.8,
-                shadowRadius: 10,
-                elevation: 10,
-            }
-        })
     },
     glowFrame: {
         ...StyleSheet.absoluteFillObject,
@@ -122,7 +109,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        marginBottom: 5,
+        marginBottom: 0,
+        marginTop: 10,
         position: 'relative',
     },
     titleContainer: {
@@ -160,7 +148,7 @@ const styles = StyleSheet.create({
         textShadowColor: NEON_COLOR,
         textShadowRadius: 10,
         textShadowOffset: { width: 0, height: 0 },
-        fontFamily: Platform.OS === 'web' ? 'monospace' : 'PressStart2P_400Regular',
+        fontFamily: 'PressStart2P_400Regular',
     },
     exitButton: {
         width: 30,
@@ -174,7 +162,7 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        paddingHorizontal: 10,
-        paddingBottom: 10,
+        paddingHorizontal: 0,
+        paddingBottom: 0,
     },
 });
